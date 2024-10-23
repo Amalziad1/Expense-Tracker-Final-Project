@@ -1,7 +1,7 @@
-/* Global Styles */
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f4f8; /* Light background */
+    background-color: #f0f4f8; 
     color: #333;
     margin: 0;
     padding: 0;
@@ -16,7 +16,7 @@ body {
 
 /* Navigation bar */
 nav {
-    background-color: #3f51b5; /* Blue */
+    background-color: #3f51b5; 
     padding: 15px;
     text-align: center;
 }
@@ -32,7 +32,7 @@ nav a {
 }
 
 nav a:hover {
-    background-color: #673ab7; /* Purple */
+    background-color: #673ab7; 
     color: #ffffff;
 }
 
@@ -50,34 +50,34 @@ nav a:hover {
 
 /* Primary Button (Add Expense) */
 .btn {
-    background-color: #3f51b5; /* Blue */
+    background-color: #3f51b5; 
 }
 
 /* Edit Button */
 .edit-btn {
-    background-color: #673ab7; /* Purple */
+    background-color: #673ab7; 
 }
 
 /* Delete Button */
 .delete-btn {
-    background-color: #f44336; /* Red for delete action */
+    background-color: #f44336; 
 }
 
-/* Hover effect: changes background color and adds a little scale effect */
+
 .btn:hover, .delete-btn:hover, .edit-btn:hover {
     transform: scale(1.05);
 }
 
 .btn:hover {
-    background-color: #1e88e5; /* Lighter blue on hover */
+    background-color: #1e88e5; 
 }
 
 .edit-btn:hover {
-    background-color: #9575cd; /* Lighter purple on hover */
+    background-color: #9575cd;
 }
 
 .delete-btn:hover {
-    background-color: #e53935; /* Darker red on hover */
+    background-color: #e53935; 
 }
 
 /* Animation when clicking a button */
@@ -99,7 +99,7 @@ table th, table td {
 }
 
 table th {
-    background-color: #3f51b5; /* Blue header */
+    background-color: #3f51b5; 
     color: white;
 }
 
@@ -108,7 +108,7 @@ table tr:nth-child(even) {
 }
 
 table tr:hover {
-    background-color: #e1bee7; /* Light purple on hover */
+    background-color: #e1bee7; 
 }
 
 /* Form */
@@ -135,22 +135,22 @@ form input, form select {
 }
 
 form input:focus, form select:focus {
-    border-color: #673ab7; /* Purple border on focus */
+    border-color: #673ab7;
     outline: none;
 }
 
 /* Chart Container */
 .chart-container {
     margin-top: 40px;
-    max-width: 600px; /* Set a max width for the chart */
-    height: 400px; /* Set a height for the chart */
-    margin-left: auto; /* Center the chart horizontally */
-    margin-right: auto; /* Center the chart horizontally */
+    max-width: 600px; 
+    height: 400px; 
+    margin-left: auto; 
+    margin-right: auto;
 }
 
 /* Headings */
 h1, h2, h3 {
-    color: #3f51b5; /* Blue headings */
+    color: #3f51b5;
 }
 
 /* Responsive Table */
