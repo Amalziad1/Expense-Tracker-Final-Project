@@ -1,0 +1,179 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8; /* Light background */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Navigation bar */
+nav {
+    background-color: #3f51b5; /* Blue */
+    padding: 15px;
+    text-align: center;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    margin: 0 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #673ab7; /* Purple */
+    color: #ffffff;
+}
+
+/* Buttons */
+.btn, .delete-btn, .edit-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 10px 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Primary Button (Add Expense) */
+.btn {
+    background-color: #3f51b5; /* Blue */
+}
+
+/* Edit Button */
+.edit-btn {
+    background-color: #673ab7; /* Purple */
+}
+
+/* Delete Button */
+.delete-btn {
+    background-color: #f44336; /* Red for delete action */
+}
+
+/* Hover effect: changes background color and adds a little scale effect */
+.btn:hover, .delete-btn:hover, .edit-btn:hover {
+    transform: scale(1.05);
+}
+
+.btn:hover {
+    background-color: #1e88e5; /* Lighter blue on hover */
+}
+
+.edit-btn:hover {
+    background-color: #9575cd; /* Lighter purple on hover */
+}
+
+.delete-btn:hover {
+    background-color: #e53935; /* Darker red on hover */
+}
+
+/* Animation when clicking a button */
+.btn:active, .delete-btn:active, .edit-btn:active {
+    transform: scale(0.95);
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+table th {
+    background-color: #3f51b5; /* Blue header */
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #e1bee7; /* Light purple on hover */
+}
+
+/* Form */
+form {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+form input, form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+form input:focus, form select:focus {
+    border-color: #673ab7; /* Purple border on focus */
+    outline: none;
+}
+
+/* Chart Container */
+.chart-container {
+    margin-top: 40px;
+    max-width: 600px; /* Set a max width for the chart */
+    height: 400px; /* Set a height for the chart */
+    margin-left: auto; /* Center the chart horizontally */
+    margin-right: auto; /* Center the chart horizontally */
+}
+
+/* Headings */
+h1, h2, h3 {
+    color: #3f51b5; /* Blue headings */
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    
+    table tr {
+        margin-bottom: 15px;
+    }
+
+    table td {
+        padding-left: 50%;
+        text-align: right;
+        position: relative;
+    }
+
+    table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        text-align: left;
+    }
+}
