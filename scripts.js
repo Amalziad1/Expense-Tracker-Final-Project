@@ -147,5 +147,25 @@ function updateCharts() {
     });
 }
 
-// Load expenses when the page is ready
 document.addEventListener('DOMContentLoaded', loadExpenses);
+function savePersonalDetails() {
+    const name = document.getElementById('userName').value;
+    const email = document.getElementById('userEmail').value;
+
+    localStorage.setItem('personalDetails', JSON.stringify({ name, email }));
+    alert('Personal details saved successfully!');
+}
+
+function loadPersonalDetails() {
+    const details = JSON.parse(localStorage.getItem('personalDetails'));
+    if (details) {
+        document.getElementById('userName').value = details.name;
+        document.getElementById('userEmail').value = details.email;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadExpenses();
+    loadPersonalDetails();
+});
+
