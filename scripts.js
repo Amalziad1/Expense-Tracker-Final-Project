@@ -169,3 +169,28 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPersonalDetails();
 });
 
+// Filter expenses by category
+function filterExpenses() {
+    const category = document.getElementById('categoryFilter').value;
+    const filteredExpenses = category ? expenses.filter(expense => expense.category === category) : expenses;
+    updateExpenseTable(filteredExpenses);
+}
+
+ function updateExpenseTable(filteredList = expenses) {
+    const tableBody = document.getElementById('expenseTable').querySelector('tbody');
+    tableBody.innerHTML = '';
+
+    filteredList.forEach((expense, index) => {
+        const row = `<tr>
+            <td>${expense.date}</td>
+            <td>${expense.name}</td>
+            <td>${expense.category}</td>
+            <td>${expense.amount.toFixed(2)}</td>
+            <td>
+                <button class="edit-btn" onclick="editExpense(${index})">Edit</button>
+                <button class="delete-btn" onclick="deleteExpense('${expense.name}')">Delete</button>
+            </td>
+        </tr>`;
+        tableBody.insertAdjacentHTML('beforeend', row);
+    });
+}
