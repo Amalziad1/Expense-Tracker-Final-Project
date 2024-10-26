@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Income</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="my-expenses.html">My Expenses</a>
+        <a href="my-incomes.html">My Incomes</a>
+        <a href="expense-summary.html">Expense Summary</a>
+        <a href="income-summary.html">Income Summary</a>
+        <a href="add-expense.html">Add Expense</a>
+        <a href="add-income.html">Add Income</a>
+    </nav>
+
+    <div class="container">
+        <h1>Add Income</h1>
+        <form id="incomeForm">
+            <label for="incomeName">Income Name</label>
+            <input type="text" id="incomeName" required>
+            
+            <label for="incomeCategory">Category</label>
+            <select id="incomeCategory" required>
+                <option value="Salary">Salary</option>
+                <option value="Freelance">Freelance</option>
+                <option value="Business Income">Business Income</option>
+                <option value="Investments">Investments</option>
+                <option value="Other">Other</option>
+            </select>
+            
+            <label for="incomeAmount">Amount (₪)</label> 
+            <input type="number" id="incomeAmount" required>
+            
+            <label for="incomeDate">Date</label>
+            <input type="date" id="incomeDate" required>
+            
+            <button class="btn" type="submit">Add Income</button>
+        </form>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
