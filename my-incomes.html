@@ -13,8 +13,7 @@
         <a href="my-incomes.html">My Incomes</a>
         <a href="expense-summary.html">Expense Summary</a>
         <a href="income-summary.html">Income Summary</a>
-        <a href="add-expense.html">Add Expense</a>
-        <a href="add-income.html">Add Income</a>
+        <a href="personal_info.html">Personal Info</a>
     </nav>
     
     <div class="container">
@@ -22,8 +21,25 @@
             <span class="search-icon">🔍</span>
             <input type="text" id="searchInput" onkeyup="searchIncomeTable()" placeholder="Search for anything...">
         </div>
-        <h1>Income Tracker</h1>
+        <button class="btn" onclick="openDateFilterModalForIncome()">Filter by Date</button>
 
+        <div id="dateFilterModalForIncome" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDateFilterModalForIncome()">&times;</span>
+                <h2>Filter Incomes by Date</h2>
+                <form id="dateFilterFormForIncome" onsubmit="applyDateFilterForIncome(event)">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" required>
+                    
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate" required>
+                    
+                    <button class="btn" type="submit">Apply Filter</button>
+                </form>
+            </div>
+        </div>
+        <h1>Income Tracker</h1>
+        <button class="btn" onclick="openAddIncomeModal()">+ Add Income</button>
         <h2>Incomes List</h2>
         <table id="incomeTable">
             <thead>
@@ -40,7 +56,33 @@
             </tbody>
         </table>
     </div>
-
+    <div id="addIncomeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddIncomeModal()">&times;</span>
+            <h2>Add Income</h2>
+            <form id="incomeForm">
+                <label for="incomeName">Income Name</label>
+                <input type="text" id="incomeName" required>
+                
+                <label for="incomeCategory">Category</label>
+                <select id="incomeCategory" required>
+                    <option value="Salary">Salary</option>
+                    <option value="Freelance">Freelance</option>
+                    <option value="Business Income">Business Income</option>
+                    <option value="Investments">Investments</option>
+                    <option value="Other">Other</option>
+                </select>
+                
+                <label for="incomeAmount">Amount (₪)</label> 
+                <input type="number" id="incomeAmount" required>
+                
+                <label for="incomeDate">Date</label>
+                <input type="date" id="incomeDate" required>
+                
+                <button class="btn" type="submit">Add Income</button>
+            </form>
+        </div>
+    </div>
     <script src="scripts.js"></script>
 </body>
 </html>

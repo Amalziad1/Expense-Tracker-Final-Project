@@ -13,8 +13,7 @@
         <a href="my-incomes.html">My Incomes</a>
         <a href="expense-summary.html">Expense Summary</a>
         <a href="income-summary.html">Income Summary</a>
-        <a href="add-expense.html">Add Expense</a>
-        <a href="add-income.html">Add Income</a>
+        <a href="personal_info.html">Personal Info</a>
     </nav>
     
     <div class="container">
@@ -22,9 +21,26 @@
             <span class="search-icon">🔍</span>
             <input type="text" id="searchInput" onkeyup="searchExpenseTable()" placeholder="Search for anything...">
         </div>
-        <h1>Expense Tracker</h1>
 
+        <button class="btn" onclick="openDateFilterModal()">Filter by Date</button>
+
+        <div id="dateFilterModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDateFilterModal()">&times;</span>
+                <h2>Filter Expenses by Date</h2>
+                <form id="dateFilterForm" onsubmit="applyDateFilter(event)">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" required>
+                    
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate" required>
+                    
+                    <button class="btn" type="submit">Apply Filter</button>
+                </form>
+            </div>
+        </div>
         <h2>Expenses List</h2>
+        <button class="btn" onclick="openAddExpenseModal()">+ Add Expense</button>
         <table id="expenseTable">
             <thead>
                 <tr>
@@ -38,6 +54,34 @@
             <tbody>
             </tbody>
         </table>
+    </div>
+
+    <div id="addExpenseModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddExpenseModal()">&times;</span>
+            <h2>Add Expense</h2>
+            <form id="expenseForm">
+                <label for="expenseName">Expense Name</label>
+                <input type="text" id="expenseName" required>
+                
+                <label for="expenseCategory">Category</label>
+                <select id="expenseCategory" required>
+                    <option value="Food">Food</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Utilities">Utilities</option>
+                    <option value="Other">Other</option>
+                </select>
+                
+                <label for="expenseAmount">Amount (₪)</label> 
+                <input type="number" id="expenseAmount" required>
+                
+                <label for="expenseDate">Date</label>
+                <input type="date" id="expenseDate" required>
+                
+                <button class="btn" type="submit">Add Expense</button>
+            </form>
+        </div>
     </div>
 
     <script src="scripts.js"></script>

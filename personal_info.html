@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Information</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="my-expenses.html">My Expenses</a>
+        <a href="my-incomes.html">My Incomes</a>
+        <a href="expense-summary.html">Expense Summary</a>
+        <a href="income-summary.html">Income Summary</a>
+        <a href="personal_info.html">Personal Info</a>
+    </nav>
+    <div class="center-container"> 
+        <div class="profile-container">
+            <h2>Personal Information</h2>
+            
+            <div id="userInfo">
+                <div class="section-title">Basic Information</div>
+                <div class="input-container">
+                    <label>Username:</label>
+                    <input type="text" id="username" readonly>
+                </div>
+                <div class="input-container">
+                    <label>Email:</label>
+                    <input type="email" id="email" readonly>
+                </div>
+                <div class="input-container">
+                    <label>Password:</label>
+                    <input type="password" id="password" readonly>
+                </div>
+            </div>
+            <button id="editBtn">Edit</button>
+        </div>
+    </div>
+    <div class="center-container"> 
+        <div class="profile-container">
+            <div class="section-title">Bank/Visa Card Details</div>
+            <div class="input-container">
+                <label>Card Number:</label>
+                <input type="text" id="cardNumber" placeholder="XXXX-XXXX-XXXX-XXXX">
+            </div>
+            <div class="input-container">
+                <label>Expiry Date:</label>
+                <input type="text" id="expiryDate" placeholder="MM/YY">
+            </div>
+            <div class="input-container">
+                <label>CVV:</label>
+                <input type="password" id="cvv" placeholder="XXX">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        
+        function displayUserInfo() {
+            document.getElementById('username').value = userData.username;
+            document.getElementById('email').value = userData.email;
+            document.getElementById('password').value = userData.password;
+        }
+
+        displayUserInfo();
+
+        document.getElementById('editBtn').addEventListener('click', function() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                if (input.id !== 'password' && input.id !== 'cvv') { 
+                    input.readOnly = !input.readOnly;
+                    input.style.backgroundColor = input.readOnly ? "#f9f9f9" : "#fff";
+                }
+            });
+            this.textContent = this.textContent === 'Edit' ? 'Save' : 'Edit';
+
+            if (this.textContent === 'Save') {
+                const updatedData = {
+                    username: document.getElementById('username').value,
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value
+                };
+                localStorage.setItem('userData', JSON.stringify(updatedData));
+                
+                const cardData = {
+                    cardNumber: document.getElementById('cardNumber').value,
+                    expiryDate: document.getElementById('expiryDate').value,
+                    cvv: document.getElementById('cvv').value
+                };
+                localStorage.setItem('cardData', JSON.stringify(cardData));
+            }
+        });
+    </script>
+</body>
+</html>

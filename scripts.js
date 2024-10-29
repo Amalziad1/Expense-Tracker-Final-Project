@@ -1,53 +1,73 @@
-//  ================================================= Income functions =================================================
-
+//  ================================================= Expense functions =================================================
 let expenses = [];
 
-//loading expenses from local storage
+// Load expenses from local storage or initialize with sample data
 function loadExpenses() {
     const storedExpenses = localStorage.getItem('expenses');
-    if (storedExpenses) {
-        expenses = JSON.parse(storedExpenses);
-    } else {
-        //fake data
-        expenses = [
-            { name: "Lunch", category: "Food", amount: 12.99, date: "2024-10-20" },
-            { name: "Uber", category: "Transportation", amount: 8.50, date: "2024-10-21" },
-            { name: "Movie Ticket", category: "Entertainment", amount: 15.00, date: "2024-10-22" },
-            { name: "Electricity Bill", category: "Utilities", amount: 45.00, date: "2024-10-15" },
-            { name: "Groceries", category: "Food", amount: 60.00, date: "2024-10-18" }
-        ];
-        localStorage.setItem('expenses', JSON.stringify(expenses));
-    }
+    expenses = storedExpenses ? JSON.parse(storedExpenses) : [
+        { name: "Lunch", category: "Food", amount: 12.99, date: "2024-10-20" },
+        { name: "Uber", category: "Transportation", amount: 8.50, date: "2024-10-21" },
+        { name: "Movie Ticket", category: "Entertainment", amount: 15.00, date: "2024-10-22" }
+    ];
+    saveExpenses();  // Save initial data if no data exists
     updateExpenseTable();
     updateExpenseCharts();
 }
 
-//saving expenses to local storage
+// Save expenses to local storage
 function saveExpenses() {
     localStorage.setItem('expenses', JSON.stringify(expenses));
 }
 
-//adding expense form submission
-document.getElementById('expenseForm')?.addEventListener('submit', function(event) {
-    event.preventDefault();
-    const expense = {
-        name: document.getElementById('expenseName').value,
-        category: document.getElementById('expenseCategory').value,
-        amount: parseFloat(document.getElementById('expenseAmount').value),
-        date: document.getElementById('expenseDate').value
-    };
-    expenses.push(expense);
-    saveExpenses();
-    alert('Expense added successfully!');
-    document.getElementById('expenseForm').reset();
-    updateExpenseTable();
-    updateExpenseCharts();
+// Modal functions to open and close
+function openAddExpenseModal() {
+    document.getElementById('addExpenseModal').style.display = 'block';
+}
+
+function closeAddExpenseModal() {
+    document.getElementById('addExpenseModal').style.display = 'none';
+    document.getElementById('expenseForm').reset(); // Reset the form when closing
+}
+
+// Initialize expense form submission
+document.addEventListener('DOMContentLoaded', function() {
+    // Load expenses after DOM is fully loaded
+    loadExpenses();
+
+    // Adding event listener to expense form only after DOM is loaded
+    const expenseForm = document.getElementById('expenseForm');
+    if (expenseForm) {
+        expenseForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('expenseName').value.trim();
+            const category = document.getElementById('expenseCategory').value.trim();
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            const date = document.getElementById('expenseDate').value.trim();
+
+            // Check if all fields are filled and amount is a valid number
+            if (!name || !category || isNaN(amount) || !date) {
+                alert("Please fill out all fields correctly.");
+                return;
+            }
+
+            const expense = { name, category, amount, date };
+            expenses.push(expense); // Add new expense
+            saveExpenses();          // Save to local storage
+            updateExpenseTable();    // Refresh the table display
+            updateExpenseCharts();   // Update charts
+
+            alert('Expense added successfully!'); // Confirm addition
+            closeAddExpenseModal(); // Close the modal after submission
+        });
+    }
 });
 
+// Update the expense table display
 function updateExpenseTable() {
     const tableBody = document.getElementById('expenseTable')?.querySelector('tbody');
     if (!tableBody) return;
-    tableBody.innerHTML = '';
+    tableBody.innerHTML = ''; // Clear existing rows
 
     expenses.forEach((expense, index) => {
         const row = `<tr>
@@ -57,13 +77,14 @@ function updateExpenseTable() {
             <td>${expense.amount.toFixed(2)}</td>
             <td>
                 <button class="edit-btn" onclick="editExpense(${index})">Edit</button>
-                <button class="delete-btn" onclick="deleteExpense('${expense.name}')">Delete</button>
+                <button class="delete-btn" onclick="deleteExpense(${index})">Delete</button>
             </td>
         </tr>`;
         tableBody.insertAdjacentHTML('beforeend', row);
     });
 }
 
+// Edit an existing expense
 function editExpense(index) {
     const expense = expenses[index];
     document.getElementById('expenseName').value = expense.name;
@@ -71,21 +92,22 @@ function editExpense(index) {
     document.getElementById('expenseAmount').value = expense.amount;
     document.getElementById('expenseDate').value = expense.date;
 
-    // remove the old expense
-    expenses.splice(index, 1);
+    expenses.splice(index, 1); // Remove old expense to replace it
+    saveExpenses();
+    updateExpenseTable();
+    updateExpenseCharts();
+    openAddExpenseModal(); // Open modal with pre-filled data
+}
+
+// Delete an expense by index
+function deleteExpense(index) {
+    expenses.splice(index, 1); // Remove expense by index
     saveExpenses();
     updateExpenseTable();
     updateExpenseCharts();
 }
 
-function deleteExpense(expenseName) {
-    expenses = expenses.filter(exp => exp.name !== expenseName);
-    saveExpenses();
-    updateExpenseTable();
-    updateExpenseCharts();
-}
-
-//initialize Chart.js charts
+// Chart.js initialization and updates
 function updateExpenseCharts() {
     const ctxPie = document.getElementById('expensePieChart')?.getContext('2d');
     const ctxBar = document.getElementById('expenseBarChart')?.getContext('2d');
@@ -99,11 +121,11 @@ function updateExpenseCharts() {
     const categoryLabels = Object.keys(categories);
     const categoryValues = Object.values(categories);
 
-    // destroy previous charts to avoid overlapping
+    // Destroy previous charts to avoid overlapping
     if (window.pieChart) window.pieChart.destroy();
     if (window.barChart) window.barChart.destroy();
 
-    //Pie chart
+    // Pie chart
     window.pieChart = new Chart(ctxPie, {
         type: 'pie',
         data: {
@@ -116,15 +138,12 @@ function updateExpenseCharts() {
         options: {
             responsive: true,
             plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                },
+                legend: { display: true, position: 'top' }
             }
         }
     });
 
-    //Bar chart
+    // Bar chart
     window.barChart = new Chart(ctxBar, {
         type: 'bar',
         data: {
@@ -137,27 +156,32 @@ function updateExpenseCharts() {
         },
         options: {
             responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+            scales: { y: { beginAtZero: true } }
         }
     });
 }
-function searchExpenseTable() {
-    var input, filter, table, tr, td, i, j, txtValue;
-    input = document.getElementById("searchInput");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("expenseTable");
-    tr = table.getElementsByTagName("tr");
 
-    for (i = 1; i < tr.length; i++) {
+// Click outside the modal to close
+window.onclick = function(event) {
+    const modal = document.getElementById('addExpenseModal');
+    if (event.target === modal) {
+        closeAddExpenseModal();
+    }
+};
+
+// Search functionality for the expense table
+function searchExpenseTable() {
+    const input = document.getElementById("searchInput");
+    const filter = input.value.toUpperCase();
+    const table = document.getElementById("expenseTable");
+    const tr = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < tr.length; i++) {
         tr[i].style.display = "none";
-        td = tr[i].getElementsByTagName("td");
-        for (j = 0; j < td.length; j++) {
+        const td = tr[i].getElementsByTagName("td");
+        for (let j = 0; j < td.length; j++) {
             if (td[j]) {
-                txtValue = td[j].textContent || td[j].innerText;
+                const txtValue = td[j].textContent || td[j].innerText;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
                     tr[i].style.display = "";
                     break;
@@ -166,8 +190,38 @@ function searchExpenseTable() {
         }
     }
 }
-// Load expenses when the page is ready
-document.addEventListener('DOMContentLoaded', loadExpenses);
+//functions for filter window
+function openDateFilterModal() {
+    document.getElementById('dateFilterModal').style.display = 'block';
+}
+
+function closeDateFilterModal() {
+    document.getElementById('dateFilterModal').style.display = 'none';
+}
+
+function applyDateFilter(event) {
+    event.preventDefault();
+    
+    const startDate = new Date(document.getElementById('startDate').value);
+    const endDate = new Date(document.getElementById('endDate').value);
+    
+    // Get all rows in the expense table
+    const tableRows = document.querySelectorAll('#expenseTable tbody tr');
+
+    tableRows.forEach(row => {
+        const dateCell = row.querySelector('td:first-child');
+        const expenseDate = new Date(dateCell.textContent);
+        
+        // Show or hide row based on date range
+        if (expenseDate >= startDate && expenseDate <= endDate) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    closeDateFilterModal();
+}
 
 //  ================================================= Income functions =================================================
 let incomes = [];
@@ -186,22 +240,48 @@ function loadIncomes() {
 function saveIncomes() {
     localStorage.setItem('incomes', JSON.stringify(incomes));
 }
+// new added:
+function openAddIncomeModal() {
+    document.getElementById('addIncomeModal').style.display = 'block';
+}
+function closeAddIncomeModal() {
+    document.getElementById('addIncomeModal').style.display = 'none';
+    document.getElementById('incomeForm').reset(); // Reset the form when closing
+}
 
-document.getElementById('incomeForm')?.addEventListener('submit', function(event) {
-    event.preventDefault();
-    const income = {
-        name: document.getElementById('incomeName').value,
-        category: document.getElementById('incomeCategory').value,
-        amount: parseFloat(document.getElementById('incomeAmount').value),
-        date: document.getElementById('incomeDate').value
-    };
-    incomes.push(income);
-    saveIncomes();
-    alert('Income added successfully!');
-    document.getElementById('incomeForm').reset();
-    updateIncomeTable();
-    updateIncomeCharts();
+document.addEventListener('DOMContentLoaded', function() {
+    // Load incomes after DOM is fully loaded
+    loadIncomes();
+
+    // Adding event listener to income form only after DOM is loaded
+    const incomeForm = document.getElementById('incomeForm');
+    if (incomeForm) {
+        incomeForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('incomeName').value.trim();
+            const category = document.getElementById('incomeCategory').value.trim();
+            const amount = parseFloat(document.getElementById('incomeAmount').value);
+            const date = document.getElementById('incomeDate').value.trim();
+
+            // Check if all fields are filled and amount is a valid number
+            if (!name || !category || isNaN(amount) || !date) {
+                alert("Please fill out all fields correctly.");
+                return;
+            }
+
+            const income = { name, category, amount, date };
+            incomes.push(income); // Add new income
+            saveIncomes();          // Save to local storage
+            updateIncomeTable();    // Refresh the table display
+            updateIncomeCharts();   // Update charts
+
+            alert('Income added successfully!'); // Confirm addition
+            closeAddIncomeModal(); // Close the modal after submission
+        });
+    }
 });
+
 
 function updateIncomeTable() {
     const tableBody = document.getElementById('incomeTable')?.querySelector('tbody');
@@ -221,19 +301,6 @@ function updateIncomeTable() {
         </tr>`;
         tableBody.insertAdjacentHTML('beforeend', row);
     });
-}
-
-function editIncome(index) {
-    const income = incomes[index];
-    document.getElementById('incomeName').value = income.name;
-    document.getElementById('incomeCategory').value = income.category;
-    document.getElementById('incomeAmount').value = income.amount;
-    document.getElementById('incomeDate').value = income.date;
-
-    incomes.splice(index, 1);
-    saveIncomes();
-    updateIncomeTable();
-    updateIncomeCharts();
 }
 
 function deleteIncome(incomeName) {
@@ -301,9 +368,13 @@ function updateIncomeCharts() {
         }
     });
 }
-
-// load incomes when the page is ready
-document.addEventListener('DOMContentLoaded', loadIncomes);
+// Click outside the modal to close
+window.onclick = function(event) {
+    const modal = document.getElementById('addExpenseModal');
+    if (event.target === modal) {
+        closeAddExpenseModal();
+    }
+};
 
 function searchIncomeTable() {
     var input, filter, table, tr, td, i, j, txtValue;
@@ -325,4 +396,35 @@ function searchIncomeTable() {
             }
         }
     }
+}
+//functions for filter window
+function openDateFilterModalForIncome() {
+    document.getElementById('dateFilterModalForIncome').style.display = 'block';
+}
+
+function closeDateFilterModalForIncome() {
+    document.getElementById('dateFilterModalForIncome').style.display = 'none';
+}
+
+function applyDateFilterForIncome(event) {
+    event.preventDefault();
+    
+    const startDate = new Date(document.getElementById('startDate').value);
+    const endDate = new Date(document.getElementById('endDate').value);
+    
+    const tableRows = document.querySelectorAll('#incomeTable tbody tr');
+
+    tableRows.forEach(row => {
+        const dateCell = row.querySelector('td:first-child');
+        const incomeDate = new Date(dateCell.textContent);
+        
+        // Show or hide row based on date range
+        if (incomeDate >= startDate && incomeDate <= endDate) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    closeDateFilterModal();
 }
