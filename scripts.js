@@ -166,7 +166,6 @@ function updateExpenseCharts(filteredDate = null) {
     });
 }
 
-// Click outside the modal to close
 window.onclick = function(event) {
     const modal = document.getElementById('addExpenseModal');
     if (event.target === modal) {
@@ -174,9 +173,8 @@ window.onclick = function(event) {
     }
 };
 
-// Search functionality for the expense table
 function searchExpenseTable() {
-    const input = document.getElementById("searchInput");
+    const input = document.querySelector(".search-input");
     const filter = input.value.toUpperCase();
     const table = document.getElementById("expenseTable");
     const tr = table.getElementsByTagName("tr");
@@ -423,7 +421,7 @@ window.onclick = function(event) {
 
 function searchIncomeTable() {
     var input, filter, table, tr, td, i, j, txtValue;
-    input = document.getElementById("searchInput");
+    input = document.querySelector(".search-input");
     filter = input.value.toUpperCase();
     table = document.getElementById("incomeTable");
     tr = table.getElementsByTagName("tr");
