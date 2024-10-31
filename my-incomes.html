@@ -38,19 +38,19 @@
                 </form>
             </div>
         </div>
-        <h1>Income Tracker</h1>
-        <button class="btn" onclick="openAddIncomeModal()">+ Add Income</button>
         <h2>Incomes List</h2>
+        <button class="btn" onclick="openAddIncomeModal()">+ Add Income</button>
+        
         <table id="incomeTable">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Amount (₪)</th> 
+                    <th onclick="sortIncomeTable(0)">Date <span class="sort-icon" id="dateSortIcon">▲▼</span></th>
+                    <th onclick="sortIncomeTable(1)">Name <span class="sort-icon" id="nameSortIcon">▲▼</span></th>
+                    <th onclick="sortIncomeTable(2)">Category <span class="sort-icon" id="categorySortIcon">▲▼</span></th>
+                    <th onclick="sortIncomeTable(3)">Amount (₪) <span class="sort-icon" id="amountSortIcon">▲▼</span></th>
                     <th>Actions</th>
                 </tr>
-            </thead>
+            </thead>   
             <tbody>
                 
             </tbody>

@@ -256,6 +256,13 @@ input {
 .editBtn:hover { 
     background-color: #673ab7; 
 }
+.sort-icon {
+    font-size: 0.8em;
+    margin-left: 5px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
 /* modal styles*/
 .modal {
     display: none;

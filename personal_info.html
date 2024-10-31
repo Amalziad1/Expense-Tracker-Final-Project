@@ -33,7 +33,7 @@
                     <input type="password" id="password" readonly>
                 </div>
             </div>
-            <button id="editBtn">Edit</button>
+            <button class="editBtn">Edit</button>
         </div>
     </div>
     <div class="center-container"> 
@@ -55,24 +55,24 @@
     </div>
 
     <script>
-        const userData = JSON.parse(localStorage.getItem('userData'));
-        
+        const userData = JSON.parse(localStorage.getItem('userData')) || {};
+    
         function displayUserInfo() {
-            document.getElementById('username').value = userData.username;
-            document.getElementById('email').value = userData.email;
-            document.getElementById('password').value = userData.password;
+            document.getElementById('username').value = userData.username || '';
+            document.getElementById('email').value = userData.email || '';
+            document.getElementById('password').value = userData.password || '';
         }
 
         displayUserInfo();
-
-        document.getElementById('editBtn').addEventListener('click', function() {
-            const inputs = document.querySelectorAll('input');
+        document.querySelector('.editBtn').addEventListener('click', function() {
+            const inputs = document.querySelectorAll('#userInfo input');
             inputs.forEach(input => {
                 if (input.id !== 'password' && input.id !== 'cvv') { 
                     input.readOnly = !input.readOnly;
                     input.style.backgroundColor = input.readOnly ? "#f9f9f9" : "#fff";
                 }
             });
+            
             this.textContent = this.textContent === 'Edit' ? 'Save' : 'Edit';
 
             if (this.textContent === 'Save') {
@@ -91,6 +91,6 @@
                 localStorage.setItem('cardData', JSON.stringify(cardData));
             }
         });
-    </script>
+    </script>    
 </body>
 </html>

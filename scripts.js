@@ -222,6 +222,83 @@ function applyDateFilter(event) {
 
     closeDateFilterModal();
 }
+let sortOrder = {};
+const sortIconIds = ["dateSortIcon", "nameSortIcon", "categorySortIcon", "amountSortIcon"];
+
+function sortTable(columnIndex) {
+    const table = document.getElementById("expenseTable");
+    const tbody = table.tBodies[0];
+    const rows = Array.from(tbody.rows);
+    const isNumeric = columnIndex === 3; //trure for amount
+    sortOrder[columnIndex] = !sortOrder[columnIndex];
+
+    rows.sort((rowA, rowB) => {
+        let cellA = rowA.cells[columnIndex].textContent.trim();
+        let cellB = rowB.cells[columnIndex].textContent.trim();
+
+        if (isNumeric) {
+            cellA = parseFloat(cellA) || 0;
+            cellB = parseFloat(cellB) || 0;
+        } else if (columnIndex === 0) {
+            cellA = new Date(cellA);
+            cellB = new Date(cellB);
+        }
+
+        if (cellA < cellB) return sortOrder[columnIndex] ? -1 : 1;
+        if (cellA > cellB) return sortOrder[columnIndex] ? 1 : -1;
+        return 0;
+    });
+
+    rows.forEach(row => tbody.appendChild(row)); //insert rows in sorted order again
+    updateSortIcons(columnIndex);
+}
+
+function updateSortIcons(activeColumnIndex) {
+    sortIconIds.forEach((iconId, index) => {
+        const iconElement = document.getElementById(iconId);
+        if (index === activeColumnIndex) {
+            iconElement.textContent = sortOrder[activeColumnIndex] ? "▲" : "▼";
+        } else {
+            iconElement.textContent = "▲▼";
+        }
+    });
+}
+function filterExpenses(period) {
+    const now = new Date();
+    let filteredExpenses;
+
+    switch (period) {
+        case 'weekly':
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay());
+            filteredExpenses = expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate >= weekStart && expenseDate <= now;
+            });
+            break;
+        
+        case 'monthly':
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+            filteredExpenses = expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate >= monthStart && expenseDate <= now;
+            });
+            break;
+
+        case 'yearly':
+            const yearStart = new Date(now.getFullYear(), 0, 1);
+            filteredExpenses = expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate >= yearStart && expenseDate <= now;
+            });
+            break;
+
+        default:
+            filteredExpenses = expenses;
+    }
+
+    updateChartsAndTable(filteredExpenses);
+}
 
 //  ================================================= Income functions =================================================
 let incomes = [];
@@ -325,8 +402,6 @@ function updateIncomeCharts() {
 
     if (window.pieChart) window.pieChart.destroy();
     if (window.barChart) window.barChart.destroy();
-
-    // Pie chart
     window.pieChart = new Chart(ctxPie, {
         type: 'pie',
         data: {
@@ -346,8 +421,6 @@ function updateIncomeCharts() {
             }
         }
     });
-
-    // Bar chart
     window.barChart = new Chart(ctxBar, {
         type: 'bar',
         data: {
@@ -427,4 +500,44 @@ function applyDateFilterForIncome(event) {
     });
 
     closeDateFilterModal();
+}
+let sortIncomeOrder = {};
+const sortIncomeIconIds = ["dateSortIcon", "nameSortIcon", "categorySortIcon", "amountSortIcon"];
+
+function sortIncomeTable(columnIndex) {
+    const table = document.getElementById("incomeTable");
+    const tbody = table.tBodies[0];
+    const rows = Array.from(tbody.rows);
+    const isNumeric = columnIndex === 3; //true for 'amount'
+    sortIncomeOrder[columnIndex] = !sortIncomeOrder[columnIndex];
+    rows.sort((rowA, rowB) => {
+        let cellA = rowA.cells[columnIndex].textContent.trim();
+        let cellB = rowB.cells[columnIndex].textContent.trim();
+
+        if (isNumeric) {
+            cellA = parseFloat(cellA) || 0;
+            cellB = parseFloat(cellB) || 0;
+        } else if (columnIndex === 0) {
+            cellA = new Date(cellA);
+            cellB = new Date(cellB);
+        }
+
+        if (cellA < cellB) return sortIncomeOrder[columnIndex] ? -1 : 1;
+        if (cellA > cellB) return sortIncomeOrder[columnIndex] ? 1 : -1;
+        return 0;
+    });
+
+    rows.forEach(row => tbody.appendChild(row)); //insert rows in sorted order again
+    updateSortIncomeIcons(columnIndex);
+}
+
+function updateSortIncomeIcons(activeColumnIndex) {
+    sortIconIds.forEach((iconId, index) => {
+        const iconElement = document.getElementById(iconId);
+        if (index === activeColumnIndex) {
+            iconElement.textContent = sortIncomeOrder[activeColumnIndex] ? "▲" : "▼";
+        } else {
+            iconElement.textContent = "▲▼";
+        }
+    });
 }
