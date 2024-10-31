@@ -108,12 +108,17 @@ function deleteExpense(index) {
 }
 
 // Chart.js initialization and updates
-function updateExpenseCharts() {
+function updateExpenseCharts(filteredDate = null) {
     const ctxPie = document.getElementById('expensePieChart')?.getContext('2d');
     const ctxBar = document.getElementById('expenseBarChart')?.getContext('2d');
     if (!ctxPie || !ctxBar) return;
 
-    const categories = expenses.reduce((acc, expense) => {
+    // filter expenses based on the filteredDate if provided
+    const filteredExpenses = filteredDate
+        ? expenses.filter(expense => new Date(expense.date) >= new Date(filteredDate.start) && new Date(expense.date) <= new Date(filteredDate.end))
+        : expenses;
+
+    const categories = filteredExpenses.reduce((acc, expense) => {
         acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
         return acc;
     }, {});
@@ -205,23 +210,23 @@ function applyDateFilter(event) {
     const startDate = new Date(document.getElementById('startDate').value);
     const endDate = new Date(document.getElementById('endDate').value);
     
-    // Get all rows in the expense table
     const tableRows = document.querySelectorAll('#expenseTable tbody tr');
 
     tableRows.forEach(row => {
         const dateCell = row.querySelector('td:first-child');
         const expenseDate = new Date(dateCell.textContent);
         
-        // Show or hide row based on date range
         if (expenseDate >= startDate && expenseDate <= endDate) {
             row.style.display = '';
         } else {
             row.style.display = 'none';
         }
     });
+    updateExpenseCharts({ start: startDate, end: endDate });
 
     closeDateFilterModal();
 }
+
 let sortOrder = {};
 const sortIconIds = ["dateSortIcon", "nameSortIcon", "categorySortIcon", "amountSortIcon"];
 
@@ -262,42 +267,6 @@ function updateSortIcons(activeColumnIndex) {
             iconElement.textContent = "▲▼";
         }
     });
-}
-function filterExpenses(period) {
-    const now = new Date();
-    let filteredExpenses;
-
-    switch (period) {
-        case 'weekly':
-            const weekStart = new Date(now);
-            weekStart.setDate(now.getDate() - now.getDay());
-            filteredExpenses = expenses.filter(expense => {
-                const expenseDate = new Date(expense.date);
-                return expenseDate >= weekStart && expenseDate <= now;
-            });
-            break;
-        
-        case 'monthly':
-            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-            filteredExpenses = expenses.filter(expense => {
-                const expenseDate = new Date(expense.date);
-                return expenseDate >= monthStart && expenseDate <= now;
-            });
-            break;
-
-        case 'yearly':
-            const yearStart = new Date(now.getFullYear(), 0, 1);
-            filteredExpenses = expenses.filter(expense => {
-                const expenseDate = new Date(expense.date);
-                return expenseDate >= yearStart && expenseDate <= now;
-            });
-            break;
-
-        default:
-            filteredExpenses = expenses;
-    }
-
-    updateChartsAndTable(filteredExpenses);
 }
 
 //  ================================================= Income functions =================================================
@@ -387,12 +356,15 @@ function deleteIncome(incomeName) {
     updateIncomeCharts();
 }
 
-function updateIncomeCharts() {
+function updateIncomeCharts(filteredDate = null) {
     const ctxPie = document.getElementById('incomePieChart')?.getContext('2d');
     const ctxBar = document.getElementById('incomeBarChart')?.getContext('2d');
     if (!ctxPie || !ctxBar) return;
+    const filteredIncomes = filteredDate
+        ? incomes.filter(income => new Date(income.date) >= new Date(filteredDate.start) && new Date(income.date) <= new Date(filteredDate.end))
+        : incomes; 
 
-    const categories = incomes.reduce((acc, income) => {
+    const categories = filteredIncomes.reduce((acc, income) => {
         acc[income.category] = (acc[income.category] || 0) + income.amount;
         return acc;
     }, {});
@@ -498,8 +470,8 @@ function applyDateFilterForIncome(event) {
             row.style.display = 'none';
         }
     });
-
-    closeDateFilterModal();
+    updateIncomeCharts({ start: startDate, end: endDate });
+    closeDateFilterModalForIncome();
 }
 let sortIncomeOrder = {};
 const sortIncomeIconIds = ["dateSortIcon", "nameSortIcon", "categorySortIcon", "amountSortIcon"];

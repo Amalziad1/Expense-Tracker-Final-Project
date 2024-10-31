@@ -18,11 +18,23 @@
 
     <div class="container">
         <h1>Expense Summary</h1>
-        <div>
-            <button onclick="filterExpenses('weekly')">Weekly</button>
-            <button onclick="filterExpenses('monthly')">Monthly</button>
-            <button onclick="filterExpenses('yearly')">Yearly</button>
-        </div>        
+        <button class="btn" onclick="openDateFilterModal()">Filter by Date</button>
+
+        <div id="dateFilterModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDateFilterModal()">&times;</span>
+                <h2>Filter Expenses by Date</h2>
+                <form id="dateFilterForm" onsubmit="applyDateFilter(event)">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" required>
+                    
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate" required>
+                    
+                    <button class="btn" type="submit">Apply Filter</button>
+                </form>
+            </div>
+        </div>
         <div class="chart-container">
             <canvas id="expensePieChart"></canvas>
         </div>

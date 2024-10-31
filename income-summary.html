@@ -18,6 +18,23 @@
 
     <div class="container">
         <h1>Income Summary</h1>
+        <button class="btn" onclick="openDateFilterModalForIncome()">Filter by Date</button>
+
+        <div id="dateFilterModalForIncome" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDateFilterModalForIncome()">&times;</span>
+                <h2>Filter Incomes by Date</h2>
+                <form id="dateFilterFormForIncome" onsubmit="applyDateFilterForIncome(event)">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" required>
+                    
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate" required>
+                    
+                    <button class="btn" type="submit">Apply Filter</button>
+                </form>
+            </div>
+        </div>
         <div class="chart-container">
             <canvas id="incomePieChart"></canvas>
         </div>
