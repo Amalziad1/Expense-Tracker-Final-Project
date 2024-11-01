@@ -1,8 +1,8 @@
 body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
-    /*background-image:url("ig.png") ; 
-    background-size: cover;*/
-    background: #ffd1ae;
+    background-image:url("ig.png") ; 
+    background-size: cover;
+    /*background: #ffd1ae;*/
     color: #4e3629; 
     margin: 0;
     padding: 0;
@@ -39,29 +39,12 @@ nav a:hover {
     border-radius: 5px;
 }
 
-.btn {
-    background-color: #8b5e3b; 
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-}
-.btn:hover {
-    background-color: #d8a47c ;
-    transform: scale(1.05);
-}
 .edit-btn {
     background-color: #a67b5b;
 }
 
 .delete-btn {
     background-color: #d66b4d; 
-}
-
-.btn:hover, .delete-btn:hover, .edit-btn:hover {
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
-    transform: translateY(-2px);
 }
 
 .edit-btn:hover {
@@ -101,9 +84,8 @@ nav a:hover {
 
 .search-icon {
     position: absolute;
-    left: 15px; 
-    font-size: 1.2em;
-    color: #8b5e3b; 
+    left: 20px; 
+    font-size: 1.4em;
 }
 
 @media (max-width: 768px) {
@@ -162,7 +144,7 @@ form label {
     display: block;
     font-weight: bold;
     color: #4e3629;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 
 form input, form select {
@@ -235,7 +217,6 @@ h1, h2, h3 {
     justify-content: center;
     align-items: center;
     min-height: 50vh; 
-    background-color: #f0f4f8;
 }
 .center-container:first-of-type {
     margin-top: 20px; 
@@ -259,11 +240,6 @@ h1, h2, h3 {
 .input-container {
     margin: 10px 0;
 }
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-}
 input { 
     padding: 10px; 
     width: 95%; 
@@ -282,7 +258,15 @@ table .edit-btn, table .delete-btn {
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
 }
 .editBtn { 
-    background-color: #8b5e3b;
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #8b5e3b; 
 }
 .edit-btn:hover, .delete-btn:hover {
     transform: translateY(-1px);
@@ -291,7 +275,6 @@ table .edit-btn, table .delete-btn {
 .sort-icon {
     font-size: 0.8em;
     margin-left: 5px;
-    color: #ffffff;
     cursor: pointer;
 }
 .button-container {
@@ -310,13 +293,7 @@ table .edit-btn, table .delete-btn {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-}
-.filter-btn {
     background-color: #8b5e3b; 
-}
-
-.add-btn {
-    background-color: #8b5e3b;
 }
 
 .btn:hover, .filter-btn:hover, .add-btn:hover {

@@ -55,15 +55,20 @@
     </div>
 
     <script>
-        const userData = JSON.parse(localStorage.getItem('userData')) || {};
+        const userData = {
+            username: "amal",
+            email: "amalabuhmoud@gmail.com",
+            password: "anything"
+        };
     
         function displayUserInfo() {
-            document.getElementById('username').value = userData.username || '';
-            document.getElementById('email').value = userData.email || '';
-            document.getElementById('password').value = userData.password || '';
+            document.getElementById('username').value = userData.username;
+            document.getElementById('email').value = userData.email;
+            document.getElementById('password').value = userData.password;
         }
-
+    
         displayUserInfo();
+    
         document.querySelector('.editBtn').addEventListener('click', function() {
             const inputs = document.querySelectorAll('#userInfo input');
             inputs.forEach(input => {
@@ -74,7 +79,7 @@
             });
             
             this.textContent = this.textContent === 'Edit' ? 'Save' : 'Edit';
-
+    
             if (this.textContent === 'Save') {
                 const updatedData = {
                     username: document.getElementById('username').value,
@@ -91,6 +96,7 @@
                 localStorage.setItem('cardData', JSON.stringify(cardData));
             }
         });
-    </script>    
+    </script>
+    
 </body>
 </html>
