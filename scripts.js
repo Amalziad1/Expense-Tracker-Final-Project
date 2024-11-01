@@ -1,5 +1,7 @@
 //  ================================================= Expense functions =================================================
 let expenses = [];
+let editIndex = null;
+
 
 // Load expenses from local storage or initialize with sample data
 function loadExpenses() {
@@ -39,27 +41,36 @@ document.addEventListener('DOMContentLoaded', function() {
     if (expenseForm) {
         expenseForm.addEventListener('submit', function(event) {
             event.preventDefault();
-
+        
             const name = document.getElementById('expenseName').value.trim();
             const category = document.getElementById('expenseCategory').value.trim();
             const amount = parseFloat(document.getElementById('expenseAmount').value);
             const date = document.getElementById('expenseDate').value.trim();
-
-            // Check if all fields are filled and amount is a valid number
+        
             if (!name || !category || isNaN(amount) || !date) {
                 alert("Please fill out all fields correctly.");
                 return;
             }
-
+        
             const expense = { name, category, amount, date };
-            expenses.push(expense); // Add new expense
-            saveExpenses();          // Save to local storage
-            updateExpenseTable();    // Refresh the table display
-            updateExpenseCharts();   // Update charts
-
-            alert('Expense added successfully!'); // Confirm addition
-            closeAddExpenseModal(); // Close the modal after submission
+        
+            if (editIndex !== null) {
+                // Update the existing expense
+                expenses[editIndex] = expense;
+                editIndex = null; // Reset editIndex after editing
+            } else {
+                // Add new expense
+                expenses.push(expense);
+            }
+        
+            saveExpenses();
+            updateExpenseTable();
+            updateExpenseCharts();
+        
+            alert('Expense saved successfully!');
+            closeAddExpenseModal();
         });
+        
     }
 });
 
@@ -86,17 +97,16 @@ function updateExpenseTable() {
 
 // Edit an existing expense
 function editExpense(index) {
+    editIndex = index;  // Store the index of the expense being edited
+
+    // Load the expense data into the form fields
     const expense = expenses[index];
     document.getElementById('expenseName').value = expense.name;
     document.getElementById('expenseCategory').value = expense.category;
     document.getElementById('expenseAmount').value = expense.amount;
     document.getElementById('expenseDate').value = expense.date;
 
-    expenses.splice(index, 1); // Remove old expense to replace it
-    saveExpenses();
-    updateExpenseTable();
-    updateExpenseCharts();
-    openAddExpenseModal(); // Open modal with pre-filled data
+    openAddExpenseModal(); // Open the modal with pre-filled data
 }
 
 // Delete an expense by index
@@ -269,6 +279,7 @@ function updateSortIcons(activeColumnIndex) {
 
 //  ================================================= Income functions =================================================
 let incomes = [];
+let editingIncomeIndex = null;
 
 function loadIncomes() {
     const storedIncomes = localStorage.getItem('incomes');
@@ -284,20 +295,19 @@ function loadIncomes() {
 function saveIncomes() {
     localStorage.setItem('incomes', JSON.stringify(incomes));
 }
-// new added:
+
 function openAddIncomeModal() {
     document.getElementById('addIncomeModal').style.display = 'block';
 }
+
 function closeAddIncomeModal() {
     document.getElementById('addIncomeModal').style.display = 'none';
-    document.getElementById('incomeForm').reset(); // Reset the form when closing
+    document.getElementById('incomeForm').reset();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Load incomes after DOM is fully loaded
     loadIncomes();
 
-    // Adding event listener to income form only after DOM is loaded
     const incomeForm = document.getElementById('incomeForm');
     if (incomeForm) {
         incomeForm.addEventListener('submit', function(event) {
@@ -308,24 +318,27 @@ document.addEventListener('DOMContentLoaded', function() {
             const amount = parseFloat(document.getElementById('incomeAmount').value);
             const date = document.getElementById('incomeDate').value.trim();
 
-            // Check if all fields are filled and amount is a valid number
             if (!name || !category || isNaN(amount) || !date) {
                 alert("Please fill out all fields correctly.");
                 return;
             }
 
             const income = { name, category, amount, date };
-            incomes.push(income); // Add new income
-            saveIncomes();          // Save to local storage
-            updateIncomeTable();    // Refresh the table display
-            updateIncomeCharts();   // Update charts
+            if (editingIncomeIndex !== null) {
+                incomes[editingIncomeIndex] = income;
+                editingIncomeIndex = null;
+            } else {
+                incomes.push(income);
+            }
+            saveIncomes();
+            updateIncomeTable();
+            updateIncomeCharts();
 
-            alert('Income added successfully!'); // Confirm addition
-            closeAddIncomeModal(); // Close the modal after submission
+            alert('Income saved successfully!');
+            closeAddIncomeModal();
         });
     }
 });
-
 
 function updateIncomeTable() {
     const tableBody = document.getElementById('incomeTable')?.querySelector('tbody');
@@ -340,15 +353,26 @@ function updateIncomeTable() {
             <td>${income.amount.toFixed(2)}</td>
             <td>
                 <button class="edit-btn" onclick="editIncome(${index})">Edit</button>
-                <button class="delete-btn" onclick="deleteIncome('${income.name}')">Delete</button>
+                <button class="delete-btn" onclick="deleteIncome(${index})">Delete</button>
             </td>
         </tr>`;
         tableBody.insertAdjacentHTML('beforeend', row);
     });
 }
 
-function deleteIncome(incomeName) {
-    incomes = incomes.filter(income => income.name !== incomeName);
+function editIncome(index) {
+    editingIncomeIndex = index;
+    const income = incomes[index];
+    document.getElementById('incomeName').value = income.name;
+    document.getElementById('incomeCategory').value = income.category;
+    document.getElementById('incomeAmount').value = income.amount;
+    document.getElementById('incomeDate').value = income.date;
+
+    openAddIncomeModal();
+}
+
+function deleteIncome(index) {
+    incomes.splice(index, 1);
     saveIncomes();
     updateIncomeTable();
     updateIncomeCharts();
@@ -411,14 +435,14 @@ function updateIncomeCharts(filteredDate = null) {
         }
     });
 }
-// Click outside the modal to close
+
+// Close modals when clicking outside
 window.onclick = function(event) {
     const modal = document.getElementById('addExpenseModal');
     if (event.target === modal) {
         closeAddExpenseModal();
     }
 };
-
 function searchIncomeTable() {
     var input, filter, table, tr, td, i, j, txtValue;
     input = document.querySelector(".search-input");
@@ -461,7 +485,6 @@ function applyDateFilterForIncome(event) {
         const dateCell = row.querySelector('td:first-child');
         const incomeDate = new Date(dateCell.textContent);
         
-        // Show or hide row based on date range
         if (incomeDate >= startDate && incomeDate <= endDate) {
             row.style.display = '';
         } else {
@@ -469,6 +492,7 @@ function applyDateFilterForIncome(event) {
         }
     });
     updateIncomeCharts({ start: startDate, end: endDate });
+
     closeDateFilterModalForIncome();
 }
 let sortIncomeOrder = {};
